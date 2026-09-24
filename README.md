@@ -19,6 +19,3 @@ Real-time Internet Weather Station built with Go.
 - WebSockets
 - Docker
 
-## Status
-
-🚧 Under Development
