@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NetPulse</title>
+  <meta name="description" content="Real-time internet weather station">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">📡</span>
+      <div>
+        <h1>NetPulse</h1>
+        <p class="tagline">Internet weather station</p>
+      </div>
+    </div>
+    <div class="overall" id="overall" aria-live="polite">
+      <span class="wx-icon" id="overall-icon">·</span>
+      <div>
+        <div class="overall-label">Overall conditions</div>
+        <div class="overall-value" id="overall-text">Connecting…</div>
+      </div>
+    </div>
+    <div class="conn" id="conn"><span class="dot"></span><span id="conn-text">connecting</span></div>
+  </header>
+
+  <main>
+    <section class="grid" id="cards" aria-label="Targets"></section>
+
+    <section class="panel" id="detail" hidden>
+      <div class="panel-head">
+        <h2 id="detail-title"></h2>
+        <div class="seg" role="group" aria-label="History window">
+          <button data-window="1h" class="on">1h</button>
+          <button data-window="6h">6h</button>
+          <button data-window="24h">24h</button>
+          <button data-window="168h">7d</button>
+        </div>
+        <button class="close" id="detail-close" aria-label="Close">✕</button>
+      </div>
+      <canvas id="history" height="220"></canvas>
+      <div class="legend"><span class="sw avg"></span>avg latency <span class="sw max"></span>max <span class="sw fail"></span>failures</div>
+      <div id="phases"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Live probe log</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Time</th><th>Target</th><th>Type</th><th>Latency</th><th>Result</th></tr></thead>
+          <tbody id="log"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <template id="card-tpl">
+    <article class="card" tabindex="0">
+      <div class="card-head">
+        <div>
+          <h3 class="name"></h3>
+          <span class="pill type"></span>
+          <span class="addr"></span>
+        </div>
+        <span class="wx-icon wx"></span>
+      </div>
+      <div class="big"><span class="latency">–</span><span class="unit">ms</span></div>
+      <div class="cond"></div>
+      <canvas class="spark" height="48"></canvas>
+      <dl class="stats">
+        <div><dt>p50</dt><dd class="p50">–</dd></div>
+        <div><dt>p95</dt><dd class="p95">–</dd></div>
+        <div><dt>jitter</dt><dd class="jitter">–</dd></div>
+        <div><dt>uptime</dt><dd class="uptime">–</dd></div>
+      </dl>
+      <div class="err" hidden></div>
+      <div class="card-foot">
+        <span class="ago"></span>
+        <button class="probe">Probe now</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
