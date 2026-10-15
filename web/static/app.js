@@ -175,6 +175,7 @@ function logResult(r) {
 
 function select(name) {
   state.selected = name;
+  history.replaceState(null, "", `#${encodeURIComponent(name)}`);
   for (const [n, e] of state.targets) e.el.classList.toggle("selected", n === name);
   $("#detail").hidden = false;
   $("#detail-title").textContent = name;
@@ -318,6 +319,9 @@ function setConn(kind, text) {
 function onSnapshot(snap) {
   renderOverall(snap.overall);
   for (const status of snap.targets) renderCard(ensureCard(status));
+  // Deep link: /#google-http opens that target's detail panel.
+  const wanted = decodeURIComponent(location.hash.slice(1));
+  if (wanted && !state.selected && state.targets.has(wanted)) select(wanted);
 }
 
 function onUpdate(u) {
@@ -353,6 +357,7 @@ function connect() {
 
 $("#detail-close").addEventListener("click", () => {
   state.selected = null;
+  history.replaceState(null, "", location.pathname);
   $("#detail").hidden = true;
   for (const e of state.targets.values()) e.el.classList.remove("selected");
 });
