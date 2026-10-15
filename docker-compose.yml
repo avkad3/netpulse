@@ -1,0 +1,14 @@
+services:
+  netpulse:
+    build: .
+    image: netpulse:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - netpulse-data:/data
+      # Use your own targets:
+      # - ./config.json:/etc/netpulse/config.json:ro
+    restart: unless-stopped
+
+volumes:
+  netpulse-data:

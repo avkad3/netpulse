@@ -9,6 +9,7 @@ import (
 	"flag"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -40,6 +41,7 @@ func run() error {
 		dbPath  = flag.String("db", os.Getenv("NETPULSE_DB"), "SQLite database path, overrides config")
 		debug   = flag.Bool("debug", false, "verbose logging")
 		showVer = flag.Bool("version", false, "print version and exit")
+		health  = flag.Bool("healthcheck", false, "query a running instance's /api/health and exit (for containers)")
 	)
 	flag.Parse()
 	if *showVer {
@@ -62,6 +64,9 @@ func run() error {
 	}
 	if *dbPath != "" {
 		cfg.DBPath = *dbPath
+	}
+	if *health {
+		return healthcheck(cfg.Listen)
 	}
 
 	st, err := store.Open(cfg.DBPath)
@@ -118,6 +123,27 @@ func run() error {
 		log.Warn("http shutdown", "err", err)
 	}
 	<-schedDone
+	return nil
+}
+
+// healthcheck exits non-zero unless the local instance reports healthy.
+func healthcheck(listen string) error {
+	host, port, err := net.SplitHostPort(listen)
+	if err != nil {
+		return err
+	}
+	if host == "" || host == "0.0.0.0" || host == "::" {
+		host = "127.0.0.1"
+	}
+	client := &http.Client{Timeout: 3 * time.Second}
+	res, err := client.Get("http://" + net.JoinHostPort(host, port) + "/api/health")
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("unhealthy: HTTP %d", res.StatusCode)
+	}
 	return nil
 }
 

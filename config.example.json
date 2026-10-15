@@ -1,0 +1,17 @@
+{
+  "listen": ":8080",
+  "db_path": "netpulse.db",
+  "retention": "168h",
+  "workers": 8,
+  "targets": [
+    { "name": "cloudflare-dns", "type": "dns", "host": "example.com", "server": "1.1.1.1:53", "interval": "15s", "timeout": "3s" },
+    { "name": "google-dns", "type": "dns", "host": "example.com", "server": "8.8.8.8:53", "interval": "15s", "timeout": "3s" },
+    { "name": "quad9-dns", "type": "dns", "host": "example.com", "server": "9.9.9.9:53", "interval": "15s", "timeout": "3s" },
+    { "name": "system-dns", "type": "dns", "host": "github.com", "interval": "30s" },
+    { "name": "google-http", "type": "http", "url": "https://www.google.com", "interval": "30s", "timeout": "10s" },
+    { "name": "github-http", "type": "http", "url": "https://github.com", "interval": "30s", "timeout": "10s" },
+    { "name": "wikipedia-http", "type": "http", "url": "https://www.wikipedia.org", "interval": "60s", "timeout": "10s" },
+    { "name": "cloudflare-tcp", "type": "tcp", "address": "1.1.1.1:443", "interval": "15s", "timeout": "3s" },
+    { "name": "google-tcp", "type": "tcp", "address": "8.8.8.8:443", "interval": "15s", "timeout": "3s" }
+  ]
+}

@@ -22,3 +22,10 @@ Thumbs.db
 
 # Logs
 *.log
+# Local data and builds
+*.db
+*.db-shm
+*.db-wal
+bin/
+/netpulse
+config.json

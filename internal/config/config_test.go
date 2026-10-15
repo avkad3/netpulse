@@ -68,3 +68,13 @@ func TestUnknownFieldRejected(t *testing.T) {
 		t.Fatal("expected error for typo'd field")
 	}
 }
+
+func TestExampleConfigLoads(t *testing.T) {
+	cfg, err := Load("../../config.example.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(cfg.Targets) < 5 {
+		t.Fatalf("example has %d targets", len(cfg.Targets))
+	}
+}
